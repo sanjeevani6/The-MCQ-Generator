@@ -1,0 +1,10 @@
+Flask
+pdfplumber
+docx
+fpdf
+Werkzeug
+langchain
+langchain-community
+ollama
+
+

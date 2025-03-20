@@ -1,0 +1,19 @@
+Here are the 2 multiple-choice questions (MCQs):
+
+## MCQ 1
+Question: What is the technology stack used for the front-end of TrendBlend?
+A) Django, SQL, NLP, ANN, CNN, Keras, Tensorflow
+B) HTML, CSS, Javascript, Tailwind CSS, Bootstrap
+C) Gradio, Streamlit, FastAPI
+D) API, AI, Machine Learning
+
+Correct Answer: B) HTML, CSS, Javascript, Tailwind CSS, Bootstrap
+
+## MCQ 2
+Question: What feature does TrendBlend have for users to track their shipments?
+A) Smart search engine
+B) Captcha generator
+C) Shipment tracker
+D) Customer review analysis
+
+Correct Answer: C) Shipment tracker

@@ -1,0 +1,14 @@
+Q: What does 'typing' refer to in the context of object classification?
+A) A way to organize objects
+B) The enforcement by the class of an object's structure or properties
+C) A type of data storage
+D) A method of object comparison
+Correct Answer: B
+
+Q: What is a precise characterization of structure or behavioral properties that a collection of entities all share?
+A) Type
+B) Class
+C) Object
+D) Entity
+Correct Answer: A
+

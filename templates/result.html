@@ -3,38 +3,372 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MCQ Results</title>
+    <title>MCQ Viewer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 20px; }
-        .container { width: 70%; margin: 0 auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); }
-        h1 { text-align: center; color: #333; }
-        .mcq { margin-bottom: 20px; padding: 15px; background-color: #e9f5ff; border: 1px solid #007bff; border-radius: 5px; }
-        .question { font-weight: bold; color: #007bff; margin-bottom: 10px; }
-        .options { margin-left: 15px; }
-        .correct-answer { font-weight: bold; color: green; margin-top: 10px; }
-        a { display: block; margin-top: 20px; text-align: center; padding: 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; }
+        /* Pastel Matcha Theme */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F3F0E6; /* Soft cream */
+            margin: 0;
+            padding: 20px;
+            color: #4A4A4A;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: #FAF8F1; /* Very light green */
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid #D4D1C5;
+        }
+        h2 {
+            text-align: center;
+            color: #5F7A61; /* Muted green */
+            font-size: 26px;
+            font-weight: 600;
+        }
+        select, button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            margin: 10px 0;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        select {
+            background: #E6E4D9; /* Soft beige */
+            color: #5F7A61;
+        }
+        button {
+            background: #A3B18A; /* Pastel green */
+            color: white;
+            transition: 0.3s ease;
+        }
+        button:hover {
+            background: #87986A;
+        }
+        .mcq-list {
+            margin-top: 20px;
+        }
+        .mcq-item {
+            background: #F7F6F2; /* Very light pastel */
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border-left: 5px solid #A3B18A;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+        }
+        .question {
+            font-weight: bold;
+            font-size: 18px;
+            color: #3C5B4D; /* Muted dark green */
+        }
+        .category, .difficulty {
+            font-style: italic;
+            font-size: 14px;
+            color: #7A7A7A;
+        }
+        .options p {
+            margin: 5px 0;
+            color: #5F7A61;
+        }
+        .correct-answer {
+            font-weight: bold;
+            color: #79A77C; /* Softer green */
+            margin-top: 10px;
+        }
+        .explanation {
+            font-size: 14px;
+            color: #555;
+            margin-top: 5px;
+        }
+        .download-buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .download-buttons button {
+            background: #9A8C98; /* Muted purple */
+            margin: 5px;
+        }
+        .download-buttons button:hover {
+            background: #7F6A7A;
+        }
+        .flashcard {
+    width: 300px;
+    height: 200px;
+    perspective: 1000px;
+    margin: auto;
+    position: relative;
+    cursor: pointer;
+}
+
+.flashcard-front, .flashcard-back {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #A3B18A;
+    border-radius: 10px;
+    background: #F3F0E6;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-size: 18px;
+}
+
+.flashcard-back {
+    transform: rotateY(180deg);
+}
+
+.flipped .flashcard-front {
+    transform: rotateY(180deg);
+}
+
+.flipped .flashcard-back {
+    transform: rotateY(0deg);
+}
+
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Generated MCQs</h1>
-        
-        {% for mcq in mcqs %}
-            <div class="mcq">
-                <div class="question">{{ mcq.question }}</div>
-                <div class="options">
-                    {% for option in mcq.options %}
-                     <p>{{ ['A', 'B', 'C', 'D'][loop.index0] }}) {{ option }}</p>
 
-                    {% endfor %}
-                </div>
-                <div class="correct-answer">Correct Answer: {{ mcq.correct_answer }}</div>
+<div class="container">
+    <h2>MCQ Viewer</h2>
+    
+    <label for="viewSelect">Choose a View:</label>
+    <select id="viewSelect" onchange="changeView()">
+        <option value="list">List View</option>
+        <option value="flashcard">Flashcard View</option>
+        <option value="quiz">Quiz Mode</option>
+    </select>
+
+    <!-- List View -->
+    <div class="mcq-list" id="mcqList">
+        {% for mcq in mcqs %}
+        <div class="mcq-item">
+            <p class="question">{{ mcq.question }}</p>
+            <p class="category">Category: {{ mcq.category }}</p>
+            <p class="difficulty">Difficulty: {{ mcq.difficulty }}</p>
+            <div class="options">
+                {% for option in mcq.options %}
+                <p>- {{ option }}</p>
+                {% endfor %}
             </div>
+            <p class="correct-answer">Correct Answer: {{ mcq.correct_answer }}</p>
+            {% if mcq.explanation %}
+            <p class="explanation">Explanation: {{ mcq.explanation }}</p>
+            {% endif %}
+        </div>
         {% endfor %}
-        
-        <a href="/download/{{ txt_filename }}">Download as TXT</a>
-        <a href="/download/{{ pdf_filename }}">Download as PDF</a>
+
+        <!-- Download Buttons -->
+        <div class="download-buttons">
+            <button onclick="downloadAsPDF()">Download as PDF</button>
+            <button onclick="downloadAsTXT()">Download as TXT</button>
+        </div>
     </div>
+    <!-- Flashcard View -->
+<!-- Flashcard View -->
+<!-- Flashcard View -->
+<div id="flashcardView" style="display: none; text-align: center;">
+    <div class="flashcard" onclick="flipCard()">
+        <div class="flashcard-front">
+            <p id="flashcardQuestion"></p>
+        </div>
+        <div class="flashcard-back">
+            <p id="flashcardAnswer"></p>
+        </div>
+    </div>
+    <button onclick="prevFlashcard()">Previous</button>
+    <button onclick="nextFlashcard()">Next</button>
+</div>
+
+
+<!-- Quiz View -->
+<div id="quizView" style="display: none;">
+    <p id="quizQuestion"></p>
+    <p id="quizCategory"></p>
+    <p id="quizDifficulty"></p>
+    <select id="quizOptions"></select>
+    <button onclick="submitQuizAnswer()">Submit Answer</button>
+    <p id="quizFeedback"></p>
+</div>
+
+</div>
+
+
+
+<script>
+    let mcqs = {{ mcqs|tojson }};
+
+    function changeView() {
+        document.getElementById("mcqList").style.display = "none";
+        let selectedView = document.getElementById("viewSelect").value;
+        if (selectedView === "list") {
+            document.getElementById("mcqList").style.display = "block";
+        }
+    }
+
+    function downloadAsPDF() {
+        const { jsPDF } = window.jspdf;
+        let doc = new jsPDF();
+        let yOffset = 20;
+
+        doc.setFont("helvetica", "bold");
+        doc.text("MCQ Questions", 105, 10, { align: "center" });
+
+        mcqs.forEach((mcq, index) => {
+            if (yOffset > 270) { doc.addPage(); yOffset = 20; }
+            doc.setFont("helvetica", "bold");
+            doc.text(`${index + 1}. ${mcq.question}`, 10, yOffset);
+            yOffset += 8;
+            doc.setFont("helvetica", "normal");
+            mcq.options.forEach(option => {
+                doc.text(`- ${option}`, 15, yOffset);
+                yOffset += 6;
+            });
+            doc.text(`Correct Answer: ${mcq.correct_answer}`, 10, yOffset);
+            yOffset += 8;
+            if (mcq.explanation) {
+                doc.setFont("helvetica", "italic");
+                doc.text(`Explanation: ${mcq.explanation}`, 10, yOffset);
+                yOffset += 8;
+            }
+            yOffset += 4;
+        });
+
+        doc.save("MCQ_Questions.pdf");
+    }
+
+    function downloadAsTXT() {
+        let textContent = "MCQ Questions\n\n";
+        mcqs.forEach((mcq, index) => {
+            textContent += `${index + 1}. ${mcq.question}\n`;
+            mcq.options.forEach(option => textContent += `- ${option}\n`);
+            textContent += `Correct Answer: ${mcq.correct_answer}\n`;
+            if (mcq.explanation) {
+                textContent += `Explanation: ${mcq.explanation}\n`;
+            }
+            textContent += "\n";
+        });
+
+        let blob = new Blob([textContent], { type: "text/plain" });
+        let link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "MCQ_Questions.txt";
+        link.click();
+    }
+
+    let currentFlashcard = 0;
+    let currentQuizIndex = 0;
+   
+    
+    function changeView() {
+        document.getElementById("mcqList").style.display = "none";
+        document.getElementById("flashcardView").style.display = "none";
+        document.getElementById("quizView").style.display = "none";
+
+        let selectedView = document.getElementById("viewSelect").value;
+        if (selectedView === "list") {
+            document.getElementById("mcqList").style.display = "block";
+        } else if (selectedView === "flashcard") {
+            document.getElementById("flashcardView").style.display = "block";
+            loadFlashcard();
+        } else if (selectedView === "quiz") {
+            document.getElementById("quizView").style.display = "block";
+            loadQuizQuestion();
+        }
+    }
+    /*function flipCard() {
+    let answer = document.getElementById("flashcardAnswer");
+    answer.style.display = answer.style.display === "none" ? "block" : "none";
+}*/
+
+let flashcards = mcqs;  // Ensure mcqs is defined elsewhere
+let currentFlashcardIndex = 0;
+
+// Ensure flashcards are loaded correctly
+function showFlashcard(index) {
+    // Validate index bounds
+    if (index < 0 || index >= mcqs.length) return;
+
+    // Reset flip state (show question side)
+    document.querySelector(".flashcard").classList.remove("flipped");
+
+    // Update question and answer
+    document.getElementById("flashcardQuestion").textContent = mcqs[index].question;
+    document.getElementById("flashcardAnswer").textContent = mcqs[index].correct_answer; // Use correct_answer for answer side
+
+    currentFlashcardIndex = index;
+}
+
+// Flip card logic
+function flipCard() {
+    document.querySelector(".flashcard").classList.toggle("flipped");
+}
+
+// Navigate to next flashcard
+function nextFlashcard() {
+    if (currentFlashcardIndex < mcqs.length - 1) {
+        showFlashcard(currentFlashcardIndex + 1);
+    }
+}
+
+// Navigate to previous flashcard
+function prevFlashcard() {
+    if (currentFlashcardIndex > 0) {
+        showFlashcard(currentFlashcardIndex - 1);
+    }
+}
+
+// Load first flashcard on page load
+document.addEventListener("DOMContentLoaded", () => {
+    showFlashcard(0);
+});
+
+
+
+    function loadQuizQuestion() {
+        let questionData = mcqs[currentQuizIndex];
+        document.getElementById("quizQuestion").textContent = questionData.question;
+        document.getElementById("quizCategory").textContent = "Category: " + questionData.category;
+        document.getElementById("quizDifficulty").textContent = "Difficulty: " + questionData.difficulty;
+
+        let optionsSelect = document.getElementById("quizOptions");
+        optionsSelect.innerHTML = "";
+        
+        questionData.options.forEach(option => {
+            let opt = document.createElement("option");
+            opt.value = option;
+            opt.textContent = option;
+            optionsSelect.appendChild(opt);
+        });
+    }
+
+    function submitQuizAnswer() {
+        let selectedAnswer = document.getElementById("quizOptions").value;
+        let correctAnswer = mcqs[currentQuizIndex].correct_answer;
+
+        let feedback = document.getElementById("quizFeedback");
+        feedback.textContent = selectedAnswer === correctAnswer ? "Correct!" : "Wrong! Correct answer: " + correctAnswer;
+        feedback.style.color = selectedAnswer === correctAnswer ? "green" : "red";
+
+        if (currentQuizIndex < mcqs.length - 1) {
+            currentQuizIndex++;
+            setTimeout(loadQuizQuestion, 1500);
+        } else {
+            feedback.textContent += " Quiz completed!";
+        }
+    }
+
+
+    document.addEventListener("DOMContentLoaded", changeView);
+</script>
+
 </body>
 </html>
-

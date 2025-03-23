@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Result</title>
+    <style>
+        body {
+            font-family: 'EB Garamond', serif;
+            background-color: #E8F5E9;
+            color: #4A635D;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            width: 70%;
+            margin: 0 auto;
+            background: #D0E8D0;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            font-size: 28px;
+            color: #6B8E75;
+        }
+        .quiz-result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+        .result-details {
+            text-align: left;
+            margin-top: 20px;
+        }
+        .result-details p {
+            margin: 5px 0;
+        }
+        .back-button {
+            margin-top: 20px;
+        }
+        .back-button a {
+            padding: 10px 15px;
+            text-decoration: none;
+            background-color: #A8C5A8;
+            color: white;
+            border-radius: 6px;
+            transition: background-color 0.3s;
+        }
+        .back-button a:hover {
+            background-color: #6B8E75;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quiz Result</h1>
+        <div class="quiz-result">
+            <p>Your Score: {{ score }} / {{ total }}</p>
+        </div>
+
+        <div class="result-details">
+            {% for result in results %}
+                <p>
+                    <strong>Question:</strong> {{ result.question }}<br>
+                    <strong>Your Answer:</strong> {{ result.user_answer }}<br>
+                    <strong>Correct Answer:</strong> {{ result.correct_answer }}<br>
+                    <strong>Options:</strong>
+                    {% for option in result.options %}
+                        {{ ['A', 'B', 'C', 'D'][loop.index0] }}) {{ option }}
+                        {% if option == result.correct_answer %}
+                            (Correct)
+                        {% endif %}
+                        <br>
+                    {% endfor %}
+                    {% if result.is_correct %}
+                        <span class="correct">Correct!</span>
+                    {% else %}
+                        <span class="incorrect">Incorrect</span>
+                    {% endif %}
+                    <hr>
+                </p>
+            {% endfor %}
+        </div>
+        <div class="back-button">
+            <a href="/results/{{ filename }}">Back to Results</a>
+        </div>
+    </div>
+</body>
+</html>

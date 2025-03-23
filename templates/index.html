@@ -3,91 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mcq Generator</title>
+    <title>MCQ Generator</title>
+    
+    <style>
+        /* Import Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&family=Quicksand:wght@500&display=swap');
+
+        /* General Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #E6F4E6; /* Matcha latte foam */
+            color: #5A5A5A; /* Soft muted text */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Container */
+        .container {
+            width: 45%;
+            background: #FAF3E0; /* Soft cream */
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        h1 {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 26px;
+            color: #6C7A57; /* Muted sage green */
+            margin-bottom: 15px;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        label {
+            font-weight: 500;
+            display: block;
+            margin-bottom: 5px;
+            color: #6C7A57; /* Soft green */
+            font-size: 16px;
+        }
+
+        textarea, input[type="file"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #C5D8A4; /* Soft matcha sage */
+            border-radius: 8px;
+            background-color: #F8E8D4; /* Warm beige */
+            color: #5A5A5A;
+            font-size: 14px;
+            outline: none;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Button */
+        button {
+            background-color: #BFD8BD; /* Pastel teal */
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            font-size: 16px;
+            font-family: 'Quicksand', sans-serif;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background 0.3s ease-in-out;
+        }
+
+        button:hover {
+            background-color: #C5D8A4; /* Softer muted sage */
+        }
+
+        /* File Upload Customization */
+        input[type="file"] {
+            cursor: pointer;
+        }
+
+        /* Links */
+        a {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 15px;
+            background-color: #BFD8BD; /* Pastel teal */
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background 0.3s ease-in-out;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        a:hover {
+            background-color: #C5D8A4; /* Softer muted sage */
+        }
+
+    </style>
 </head>
-<style>
-    body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
-}
-
-.container {
-    width: 50%;
-    margin: 50px auto;
-    background: #fff;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-h1 {
-    text-align: center;
-    color: #333;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-input[type="file"],
-input[type="number"] {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-}
-
-button {
-    background-color: #28a745;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #218838;
-}
-
-.mcq {
-    background-color: #f1f1f1;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 5px;
-}
-
-.mcq p {
-    font-size: 18px;
-}
-
-ul {
-    list-style-type: none;
-}
-
-a {
-    display: inline-block;
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    text-decoration: none;
-    margin-top: 20px;
-}
-
-a:hover {
-    background-color: #0056b3;
-}
-
-</style>
 <body>
     <div class="container">
-        <h1>MCQs from your Text</h1>
+        <h1>Generate MCQs from Text or Document</h1>
         <form action="/generate" method="post" enctype="multipart/form-data">
+            <!-- Text Input Section -->
             <div class="form-group">
-                <label for="file">Upload your document(PDF,TXT)</label>
-                <input type="file" name="file" required>
+                <label for="text">Enter text:</label>
+                <textarea name="text" placeholder="Paste your paragraph here..."></textarea>
             </div>
+
+            <!-- File Upload Section -->
             <div class="form-group">
-                <label for="num_questions">how many questions do you want</label>
-                <input type="number" name="num_questions" min="1"required >
+                <label>Or upload a document (PDF/TXT):</label>
+                <input type="file" name="file">
             </div>
+
+            <!-- Number of Questions -->
+            <div class="form-group">
+                <label>Number of questions:</label>
+                <input type="number" name="num_questions" min="1" required>
+            </div>
+
             <button type="submit">Generate MCQs</button>
         </form>
     </div>

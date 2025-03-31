@@ -1,10 +1,9 @@
 Flask
 pdfplumber
-docx
+python-docx
 fpdf
 Werkzeug
 langchain
 langchain-community
 ollama
-
-
+reportlab

@@ -50,14 +50,16 @@ def extract_text_from_file(file_path):
         print(f" File processing error: {str(e)}")
         return None
 
-def Question_mcqs_generator(input_text, num_questions):
+def Question_mcqs_generator(input_text, num_questions,difficulty):
     try:
         llm = OllamaLLM(model="llama3.2")
         prompt_template = PromptTemplate(
-            input_variables=["text", "num_questions"],
+            input_variables=["text", "num_questions","difficulty"],
             template="""You are an expert in educational content creation.
 Generate {num_questions} multiple-choice questions (MCQs) from the following text:
 "{text}"
+
+The difficulty level should be: {difficulty}.
 
 Each MCQ should have:
 - A clear question
@@ -76,7 +78,7 @@ Output the result in valid JSON format like this:
         )
 
         chain = prompt_template | llm  
-        response = chain.invoke({"text": input_text, "num_questions": num_questions})
+        response = chain.invoke({"text": input_text, "num_questions": num_questions,"difficulty": difficulty})
 
         json_match = re.search(r"\[\s*\{.*?\}\s*\]", response, re.DOTALL)
         if not json_match:
@@ -129,12 +131,12 @@ def save_mcqs_to_pdf(filename, mcqs):
     c.save()
     return pdf_file_path
 
-def async_mcq_generation(text, num_questions, filename):
+def async_mcq_generation(text, num_questions, filename,difficulty):
     try:
         processing_status[filename] = "processing"
         
         # Generate MCQs from provided text input
-        mcqs = Question_mcqs_generator(text, num_questions)
+        mcqs = Question_mcqs_generator(text, num_questions,difficulty)
 
         if mcqs:
             txt_path = save_mcqs_to_txt(filename, mcqs)
@@ -158,6 +160,8 @@ def index():
 
 @app.route("/generate", methods=["POST"])
 def generate_mcqs():
+        # Get difficulty input from form, default to 'medium' if not provided
+    difficulty = request.form.get('difficulty', 'medium')
     # Check for direct text input first
     text_input = request.form.get('text', '').strip()
     
@@ -191,7 +195,7 @@ def generate_mcqs():
 
     num_questions = int(request.form.get('num_questions', 5))
 
-    thread = threading.Thread(target=async_mcq_generation, args=(text, num_questions, base_name))
+    thread = threading.Thread(target=async_mcq_generation, args=(text, num_questions, base_name,difficulty))
     thread.start()
 
     return redirect(url_for('show_results', filename=base_name))

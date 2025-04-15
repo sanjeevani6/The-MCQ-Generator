@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MCQ Generator</title>
-    
+
     <style>
         /* Import Fonts */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&family=Quicksand:wght@500&display=swap');
@@ -12,8 +13,10 @@
         /* General Styles */
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #E6F4E6; /* Matcha latte foam */
-            color: #5A5A5A; /* Soft muted text */
+            background-color: #E6F4E6;
+            /* Matcha latte foam */
+            color: #5A5A5A;
+            /* Soft muted text */
             margin: 0;
             padding: 0;
             display: flex;
@@ -25,7 +28,8 @@
         /* Container */
         .container {
             width: 45%;
-            background: #FAF3E0; /* Soft cream */
+            background: #FAF3E0;
+            /* Soft cream */
             padding: 25px;
             border-radius: 14px;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
@@ -35,7 +39,8 @@
         h1 {
             font-family: 'Quicksand', sans-serif;
             font-size: 26px;
-            color: #6C7A57; /* Muted sage green */
+            color: #6C7A57;
+            /* Muted sage green */
             margin-bottom: 15px;
         }
 
@@ -49,17 +54,22 @@
             font-weight: 500;
             display: block;
             margin-bottom: 5px;
-            color: #6C7A57; /* Soft green */
+            color: #6C7A57;
+            /* Soft green */
             font-size: 16px;
         }
 
-        textarea, input[type="file"], input[type="number"] {
+        textarea,
+        input[type="file"],
+        input[type="number"] {
             width: 100%;
             padding: 10px;
             margin-top: 5px;
-            border: 1px solid #C5D8A4; /* Soft matcha sage */
+            border: 1px solid #C5D8A4;
+            /* Soft matcha sage */
             border-radius: 8px;
-            background-color: #F8E8D4; /* Warm beige */
+            background-color: #F8E8D4;
+            /* Warm beige */
             color: #5A5A5A;
             font-size: 14px;
             outline: none;
@@ -72,7 +82,8 @@
 
         /* Button */
         button {
-            background-color: #BFD8BD; /* Pastel teal */
+            background-color: #BFD8BD;
+            /* Pastel teal */
             color: white;
             padding: 12px 20px;
             border: none;
@@ -84,7 +95,8 @@
         }
 
         button:hover {
-            background-color: #C5D8A4; /* Softer muted sage */
+            background-color: #C5D8A4;
+            /* Softer muted sage */
         }
 
         /* File Upload Customization */
@@ -97,7 +109,8 @@
             display: inline-block;
             margin-top: 15px;
             padding: 10px 15px;
-            background-color: #BFD8BD; /* Pastel teal */
+            background-color: #BFD8BD;
+            /* Pastel teal */
             color: white;
             text-decoration: none;
             border-radius: 6px;
@@ -106,11 +119,24 @@
         }
 
         a:hover {
-            background-color: #C5D8A4; /* Softer muted sage */
+            background-color: #C5D8A4;
+            /* Softer muted sage */
         }
 
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #C5D8A4;
+            border-radius: 8px;
+            background-color: #F8E8D4;
+            color: #5A5A5A;
+            font-size: 14px;
+            outline: none;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>Generate MCQs from Text or Document</h1>
@@ -133,8 +159,19 @@
                 <input type="number" name="num_questions" min="1" required>
             </div>
 
+            <!-- Difficulty Selection -->
+            <div class="form-group">
+                <label for="difficulty">Select Difficulty:</label>
+                <select name="difficulty" id="difficulty">
+                    <option value="easy">Easy</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+            </div>
+
             <button type="submit">Generate MCQs</button>
         </form>
     </div>
 </body>
+
 </html>

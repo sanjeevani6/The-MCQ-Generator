@@ -289,42 +289,46 @@
     answer.style.display = answer.style.display === "none" ? "block" : "none";
 }*/
 
-let flashcards = mcqs;  // Ensure mcqs is defined elsewhere
-let currentFlashcardIndex = 0;
 
-// Ensure flashcards are loaded correctly
-function showFlashcard(index) {
-    // Validate index bounds
-    if (index < 0 || index >= mcqs.length) return;
+    let flashcards = mcqs;
+    let currentFlashcardIndex = 0;
+    let isFlipped = false;
 
-    // Reset flip state (show question side)
-    document.querySelector(".flashcard").classList.remove("flipped");
+    function showFlashcard(index) {
+        if (flashcards.length === 0) return;
 
-    // Update question and answer
-    document.getElementById("flashcardQuestion").textContent = mcqs[index].question;
-    document.getElementById("flashcardAnswer").textContent = mcqs[index].correct_answer; // Use correct_answer for answer side
+        const questionEl = document.getElementById("flashcardQuestion");
+        const answerEl = document.getElementById("flashcardAnswer");
+        const flashcardEl = document.querySelector(".flashcard");
 
-    currentFlashcardIndex = index;
-}
+        questionEl.textContent = flashcards[index].question;
+        answerEl.textContent = `Answer: ${flashcards[index].correct_answer}`;
 
-// Flip card logic
-function flipCard() {
-    document.querySelector(".flashcard").classList.toggle("flipped");
-}
-
-// Navigate to next flashcard
-function nextFlashcard() {
-    if (currentFlashcardIndex < mcqs.length - 1) {
-        showFlashcard(currentFlashcardIndex + 1);
+        flashcardEl.classList.remove("flipped");
+        isFlipped = false;
     }
-}
 
-// Navigate to previous flashcard
-function prevFlashcard() {
-    if (currentFlashcardIndex > 0) {
-        showFlashcard(currentFlashcardIndex - 1);
+    function nextFlashcard() {
+        currentFlashcardIndex = (currentFlashcardIndex + 1) % flashcards.length;
+        showFlashcard(currentFlashcardIndex);
     }
-}
+
+    function prevFlashcard() {
+        currentFlashcardIndex = (currentFlashcardIndex - 1 + flashcards.length) % flashcards.length;
+        showFlashcard(currentFlashcardIndex);
+    }
+
+    function flipCard() {
+        const flashcardEl = document.querySelector(".flashcard");
+        isFlipped = !isFlipped;
+        if (isFlipped) {
+            flashcardEl.classList.add("flipped");
+        } else {
+            flashcardEl.classList.remove("flipped");
+        }
+    }
+
+
 
 // Load first flashcard on page load
 document.addEventListener("DOMContentLoaded", () => {

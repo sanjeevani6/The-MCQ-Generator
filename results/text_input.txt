@@ -1,14 +1,14 @@
-Q: What does 'typing' refer to in the context of object classification?
-A) A way to organize objects
-B) The enforcement by the class of an object's structure or properties
-C) A type of data storage
-D) A method of object comparison
-Correct Answer: B
+Q: When does the world feel most honest in terms of thoughts and dreams?
+A) During a thunderstorm
+B) In the middle of the day
+C) At dawn when the world is still half-asleep
+D) Late at night
+Correct Answer: At dawn when the world is still half-asleep
 
-Q: What is a precise characterization of structure or behavioral properties that a collection of entities all share?
-A) Type
-B) Class
-C) Object
-D) Entity
-Correct Answer: A
+Q: What do people typically seek during this special time?
+A) To escape from their worries
+B) To capture clarity before the noise begins again
+C) To have a good time with friends
+D) To take a nap
+Correct Answer: To capture clarity before the noise begins again
 
